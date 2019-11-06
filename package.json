@@ -1,0 +1,22 @@
+{
+  "name": "my-appstore",
+  "version": "1.0.0",
+  "description": "For app installation via web",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zmd12356/my-appstore.git"
+  },
+  "author": "zmd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zmd12356/my-appstore/issues"
+  },
+  "homepage": "https://github.com/zmd12356/my-appstore#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
