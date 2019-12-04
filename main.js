@@ -2,6 +2,7 @@ console.log('server launching...')
 
 const constant = require('./lib/constant')
 const express = require('express')
+const fs = require('fs')
 const app = express()
 
 // 基础设置
@@ -24,7 +25,15 @@ app.set('view engine', 'handlebars');
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', (request, response) => {
-    response.render('home')
+    var appsDirPath = './apps'
+    fs.readdir(appsDirPath, (err, fileList) => {
+        if (err) {
+            console.log(err)
+        } else {
+            console.log(fileList)
+        }
+        response.render('home')
+    })
 })
 
 // 404处理放在所有路由之后
