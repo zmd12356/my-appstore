@@ -1,27 +1,26 @@
 <h1>App: Home</h1>
-<table border="1">
+<table border="2">
     <tbody>
         <tr>
             <th>应用</th>
             <th>版本</th>
-            <th>日期</th>
             <th>描述</th>
             <th>下载</th>
         </tr>
-        {{#each appsInfo}}
-            <tr>
-                <th>
-                    {{name}}
-                </th>
-            </tr>
-        {{/each}}
         <tr>
-            <th><img src="img/icon.png"></th>
-            <th>1.0.0</th>
-            <th>2019-11-11 19:30</th>
-            <th>hhhh</th>
-            <th>install</th>
+            <td><img src="{{{info.icon}}}"}></td>
+            <td>1.0.0</td>
+            <td>template</td>
+            <td>install</td>
         </tr>
+        {{#each info.apps}}
+        <tr>
+            <td>{{name}}</td>
+            <td>1.0.0</td>
+            <td>temp</td>
+            <td>install</td>
+        </tr>
+        {{/each}}
     </tbody>
 </table>
 <!--

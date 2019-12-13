@@ -22,23 +22,26 @@ app.engine("handlebars", handlebars());
 app.set("view engine", "handlebars");
 
 // 静态文件
-app.use(express.static(__dirname + "/public"))
+const publicPath = __dirname + "/public"
+app.use(express.static(publicPath))
 
-var appsDirPath = "./apps"  //应用目录
 app.get("/", (request, response) => {
-
-    fs.readdir(appsDirPath, (err, fileList) => {
-        var json = []
+    const appsPath = publicPath + "/apps"
+    fs.readdir(appsPath, (err, fileList) => {
+        var infoObj = {}
+        infoObj.icon = "/apps/appicon.png"
+        infoObj.apps = []
         if (err) {
             console.log(err)
         } else {
             console.log(fileList)
-            fileList.forEach(element => {
-
-                json.push({ "name": element })
+            fileList.forEach(item => {
+                if (fs.statSync(appsPath + "/" + item).isDirectory()) {
+                    infoObj.apps.push({ "name": item })
+                }
             });
         }
-        response.render("home", { "appsInfo": json })
+        response.render("home", { "info": infoObj })
     })
 })
 
