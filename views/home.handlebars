@@ -1,24 +1,23 @@
-<h1>App: Home</h1>
+<img src="{{{info.icon}}}" alt="app logo">
+<br>
+<a href={{{info.ca}}}>请先确认已安装CA证书</a>
+<br>
+<a href={{{info.se}}}>请先确认已安装Server证书</a>
+<h1>安装列表</h1>
 <table border="2">
     <tbody>
         <tr>
-            <th>应用</th>
             <th>版本</th>
             <th>描述</th>
-            <th>下载</th>
-        </tr>
-        <tr>
-            <td><img src="{{{info.icon}}}"}></td>
-            <td>1.0.0</td>
-            <td>template</td>
-            <td>install</td>
+            <th>安装</th>
         </tr>
         {{#each info.apps}}
         <tr>
             <td>{{name}}</td>
-            <td>1.0.0</td>
-            <td>temp</td>
-            <td>install</td>
+            <td>{{about}}</td>
+            <td>
+                <a href={{{link}}}>install</a>
+            </td>
         </tr>
         {{/each}}
     </tbody>

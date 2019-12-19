@@ -1,9 +1,16 @@
 console.log("server launching...")
 
 const constant = require("./lib/constant")
+const http = require("http")
+const https = require("https")
 const express = require("express")
 const fs = require("fs")
 const app = express()
+
+var SSLOptions = {
+    key: fs.readFileSync('./keys/server.key'),
+    cert: fs.readFileSync('./keys/server.crt')
+}
 
 // 基础设置
 // process.env.NODE_ENV === "production"    //此模式下会自动开启缓存功能
@@ -22,22 +29,38 @@ app.engine("handlebars", handlebars());
 app.set("view engine", "handlebars");
 
 // 静态文件
-const publicPath = __dirname + "/public"
+const publicPath = __dirname + "/public/"
 app.use(express.static(publicPath))
 
+const manifestPrefix0 = "itms-services://?action=download-manifest&url=https://"
+const manifestPrefix1 = "192.168.9.126"
+const manifestPrefix = manifestPrefix0 + manifestPrefix1 + ":" + (app.get("port") + 1) + "/"
+
 app.get("/", (request, response) => {
-    const appsPath = publicPath + "/apps"
+    const appsPath = publicPath + "apps/"
     fs.readdir(appsPath, (err, fileList) => {
         var infoObj = {}
-        infoObj.icon = "/apps/appicon.png"
+        infoObj.ca = "apps/ca.crt"
+        infoObj.se = "apps/server.crt"
+        infoObj.icon = "apps/image.57x57.png"
         infoObj.apps = []
         if (err) {
             console.log(err)
         } else {
             console.log(fileList)
             fileList.forEach(item => {
-                if (fs.statSync(appsPath + "/" + item).isDirectory()) {
-                    infoObj.apps.push({ "name": item })
+                var itemPath = appsPath + item
+                if (fs.statSync(itemPath).isDirectory()) {
+                    var about = "没有备注"
+                    var aboutPath = itemPath + "/about.txt"
+                    if (fs.existsSync(aboutPath)) {
+                        about = fs.readFileSync(aboutPath)
+                    }
+                    infoObj.apps.push({
+                        "name": item,
+                        "about": about,
+                        "link": manifestPrefix + "apps/" + item + "/manifest.plist"
+                    })
                 }
             });
         }
@@ -60,6 +83,16 @@ app.use((error, request, response, next) => {
     response.send("500 - internal error")
 })
 
-app.listen(app.get("port"), () => {
-    console.log("server listening on port : " + app.get("port"))
+// app.listen(app.get("port"), () => {
+//     console.log("server listening on port : " + app.get("port"))
+// })
+
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(SSLOptions, app);
+httpServer.listen(app.get("port"), () => {
+    console.log("http listening on port : " + app.get("port"))
+});
+httpsServer.listen(app.get("port") + 1, () => {
+    console.log("https listening on port : " + app.get("port"))
 })
+
